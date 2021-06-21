@@ -9,6 +9,12 @@ struct LED
         (*PORTX) &= ~bit;
     }
 
+    void init()
+    {
+        (*DDRX) |= bit;
+        (*PORTX) &= ~bit;
+    }
+
     void on()
     {
         (*PORTX) |= bit;
