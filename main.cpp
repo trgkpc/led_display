@@ -5,6 +5,11 @@
 #include <avr/interrupt.h>
 #include <util/delay.h>
 
+void led(volatile uint8_t* port)
+{
+    (*port) = 1;
+}
+
 int main(void)
 {
     DDRB = 0x00;
@@ -16,7 +21,8 @@ int main(void)
     PORTD = 0xff;
 
     while(1){
-        PIND = 0xff;
-        _delay_ms(200);
+        //PIND = 0xff;
+        led(&PIND);
+        _delay_ms(100);
     }
 }
