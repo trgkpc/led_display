@@ -3,8 +3,10 @@
 #include <avr/io.h>
 #include <avr/sleep.h>
 #include <util/delay.h>
-#include <avr/interrupt.h>
 #include <util/delay.h>
+#include <avr/interrupt.h>
+
+DEFINE_LED(D);
 
 int main(void)
 {
@@ -16,7 +18,7 @@ int main(void)
     PORTC = 0xff;
     PORTD = 0xff;
     
-    LED LED0 = GET_LED(D, 0);
+    LEDD LED0 = LEDD(0);
 
     while(1){
         LED0.toggle();

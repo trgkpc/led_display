@@ -1,5 +1,5 @@
 # コンパイル
-avr-g++ -g -O2 -mmcu=atmega328p main.cpp
+avr-g++ -g -O2 -mmcu=atmega328p main.cpp -std=c++17
 avr-objcopy -j .text -j .data -O ihex a.out binary.hex
 
 # 書き込み

@@ -2,39 +2,47 @@
 
 struct LED
 {
-    explicit LED(volatile uint8_t* DDRX_, volatile uint8_t* PORTX_, volatile uint8_t* PINX_, uint8_t id)
-        : DDRX(DDRX_), PORTX(PORTX_), PINX(PINX_), bit(1<<id)
+    LED(uint8_t id)
+        : bit(1<<id)
     {
-        (*DDRX) |= bit;
-        (*PORTX) &= ~bit;
     }
 
-    void init()
-    {
-        (*DDRX) |= bit;
-        (*PORTX) &= ~bit;
-    }
-
-    void on()
-    {
-        (*PORTX) |= bit;
-    }
-
-    void off()
-    {
-        (*PORTX) &= ~bit;
-    }
-
-    void toggle()
-    {
-        (*PORTX) ^= bit;
-    }
-    
-private:
-    volatile uint8_t* DDRX;
-    volatile uint8_t* PORTX;
-    volatile uint8_t* PINX;
+    virtual void init() = 0;
+    virtual void on() = 0;
+    virtual void off() = 0;
+    virtual void toggle() = 0;
     uint8_t bit;
 };
 
-#define GET_LED(NAME, ID) LED(&DDR##NAME, &PORT##NAME, &PIN##NAME, ID)
+#define DEFINE_LED(X)           \
+struct LED##X : LED             \
+{                               \
+    LED##X(uint8_t id)          \
+        : LED(id)               \
+    {                           \
+        init();                 \
+    }                           \
+                                \
+    void init() override        \
+    {                           \
+        DDR##X |= bit;          \
+        PORT##X &= ~bit;        \
+    }                           \
+                                \
+    void on() override          \
+    {                           \
+        PORT##X |= bit;         \
+    }                           \
+                                \
+    void off() override         \
+    {                           \
+        PORT##X &= ~bit;        \
+    }                           \
+                                \
+    void toggle() override      \
+    {                           \
+        PORT##X ^= bit;         \
+    }                           \
+};
+
+
