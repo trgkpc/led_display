@@ -9,16 +9,16 @@ using std::string, std::to_string;
 #define print(name) (cout << (#name) << " " <<(name) << endl);
 ofstream f;
 // gpio
-void define_gpio(string name, string X, int ddr, int port)
+void define_gpio(string name, string X, int ddr, int port, int pin)
 {
     for(int id=0; id<8; id++){
         string defname = name + "_" + X + to_string(id);
-        string type = name + "<" + to_string(ddr) + "," + to_string(port) + "," + to_string(id) + ">";
+        string type = name + "<" + to_string(ddr) + "," + to_string(port) + "," + to_string(pin) + "," + to_string(id) + ">";
         f << "#define" << " " << defname << " " << type << endl;
     }
 }
-#define LED(X) define_gpio("LED", #X, DDR##X, PORT##X)
-#define SWITCH(X) define_gpio("SWITCH", #X, DDR##X, PORT##X)
+#define LED(X) define_gpio("LED", #X, DDR##X, PORT##X, PIN##X)
+#define SWITCH(X) define_gpio("SWITCH", #X, DDR##X, PORT##X, PIN##X)
 
 // ピン周りのファイル読み込み
 #define _AVR_IO_H_
@@ -26,6 +26,10 @@ void define_gpio(string name, string X, int ddr, int port)
 
 int main()
 {
+    print(DDRD);
+    print(PORTD);
+    print(PIND);
+
     f = ofstream("led.hpp");
     LED(B);
     LED(C);
