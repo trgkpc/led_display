@@ -8,11 +8,6 @@ template <uint8_t DDRX_ADDR, uint8_t PORTX_ADDR, uint8_t id>
 struct LED
 {
     LED()
-        : bit(1<<id)
-    {
-    }
-
-    void init()
     {
         DDRX |= LED_BIT;
     }
@@ -31,8 +26,6 @@ struct LED
     {
         PORTX ^= LED_BIT;
     }
-
-    uint8_t bit;
 };
 
 #include "address/led.hpp"
