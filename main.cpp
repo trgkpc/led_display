@@ -1,12 +1,11 @@
 #define F_CPU 1000000
 #include "firmware/led.hpp"
+#include "firmware/pwm.hpp"
 #include <avr/io.h>
 #include <avr/sleep.h>
 #include <util/delay.h>
 #include <util/delay.h>
 #include <avr/interrupt.h>
-
-DEFINE_LED(D);
 
 int main(void)
 {
@@ -18,10 +17,14 @@ int main(void)
     PORTC = 0xff;
     PORTD = 0xff;
     
-    LEDD LED0 = LEDD(0);
+    auto led1 = LEDD0();
+    PWM0A pwm = PWM0A();
+    uint8_t t = 0;
 
     while(1){
-        LED0.toggle();
+        led1.toggle();
+        pwm.set(t);
         _delay_ms(100);
+        t += 25;
     }
 }

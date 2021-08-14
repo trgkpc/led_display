@@ -1,48 +1,38 @@
-#include <stdint.h>
+#pragma once
+#include <avr/io.h>
 
+#define DDRX    _SFR_IO8(DDRX_ADDR)
+#define PORTX   _SFR_IO8(PORTX_ADDR)
+#define LED_BIT (1<<(id))
+template <uint8_t DDRX_ADDR, uint8_t PORTX_ADDR, uint8_t id>
 struct LED
 {
-    LED(uint8_t id)
+    LED()
         : bit(1<<id)
     {
     }
 
-    virtual void init() = 0;
-    virtual void on() = 0;
-    virtual void off() = 0;
-    virtual void toggle() = 0;
+    void init()
+    {
+        DDRX |= LED_BIT;
+    }
+
+    void on()
+    {
+        PORTX |= LED_BIT;
+    }
+
+    void off()
+    {
+        PORTX &= ~LED_BIT;
+    }
+
+    void toggle()
+    {
+        PORTX ^= LED_BIT;
+    }
+
     uint8_t bit;
 };
 
-#define DEFINE_LED(X)           \
-struct LED##X : LED             \
-{                               \
-    LED##X(uint8_t id)          \
-        : LED(id)               \
-    {                           \
-        init();                 \
-    }                           \
-                                \
-    void init() override        \
-    {                           \
-        DDR##X |= bit;          \
-        PORT##X &= ~bit;        \
-    }                           \
-                                \
-    void on() override          \
-    {                           \
-        PORT##X |= bit;         \
-    }                           \
-                                \
-    void off() override         \
-    {                           \
-        PORT##X &= ~bit;        \
-    }                           \
-                                \
-    void toggle() override      \
-    {                           \
-        PORT##X ^= bit;         \
-    }                           \
-};
-
-
+#include "address/led.hpp"
