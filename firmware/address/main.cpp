@@ -8,19 +8,17 @@ using std::string, std::to_string;
 #define _SFR_IO8(id) (id)
 #define print(name) (cout << (#name) << " " <<(name) << endl);
 ofstream f;
-void define_led(string X, int ddr, int port, int id)
+// gpio
+void define_gpio(string name, string X, int ddr, int port)
 {
-    string name = "LED_" + X + to_string(id);
-    f << "#define" << " " << name << " ";
-    f << "LED<" << ddr << "," << port << "," << id << ">" << endl;
-}
-void define_leds(string X, int ddr, int port)
-{
-    for(int i=0; i<8; i++){
-        define_led(X, ddr, port, i);
+    for(int id=0; id<8; id++){
+        string defname = name + "_" + X + to_string(id);
+        string type = name + "<" + to_string(ddr) + "," + to_string(port) + "," + to_string(id) + ">";
+        f << "#define" << " " << defname << " " << type << endl;
     }
 }
-#define LED(X) define_leds(#X, DDR##X, PORT##X)
+#define LED(X) define_gpio("LED", #X, DDR##X, PORT##X)
+#define SWITCH(X) define_gpio("SWITCH", #X, DDR##X, PORT##X)
 
 // ピン周りのファイル読み込み
 #define _AVR_IO_H_
@@ -34,4 +32,9 @@ int main()
     LED(D);
     f.close();
 
+    f = ofstream("switch.hpp");
+    SWITCH(B);
+    SWITCH(C);
+    SWITCH(D);
+    f.close();
 }
